@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable Login - Session Fixation Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔓 Login System</h1>
+            <h2>Vulnerable to Session Fixation</h2>
+        </div>
+        
+        <div class="status vulnerable">
+            ⚠️ This app is intentionally vulnerable to session fixation attacks!
+        </div>
+        
+        <form method="post" class="fade-in">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        
+        <div class="test-accounts">
+            <h3>🧪 Test Accounts</h3>
+            <ul>
+                <li>admin / admin123</li>
+                <li>user1 / password123</li>
+            </ul>
+        </div>
+        
+        <div class="alert alert-warning">
+            <strong>Security Warning:</strong> This application demonstrates session fixation vulnerability. 
+            Session IDs remain the same after login, making it vulnerable to attacks.
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html> 
