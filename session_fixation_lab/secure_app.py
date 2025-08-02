@@ -3,7 +3,7 @@
 SECURE Flask App - Prevents Session Fixation Attack
 """
 
-from flask import Flask, request, session, redirect, url_for
+from flask import Flask, request, session, redirect, url_for, render_template
 from flask_session import Session
 import bcrypt
 import secrets
@@ -49,34 +49,15 @@ def login():
         else:
             return "Invalid credentials"
     
-    return '''
-    <h2>Secure Login System</h2>
-    <p style="color: green;">✅ This app prevents session fixation attacks!</p>
-    <form method="post">
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <input type="submit" value="Login">
-    </form>
-    <p><strong>Test accounts:</strong></p>
-    <ul>
-        <li>admin / admin123</li>
-        <li>user1 / password123</li>
-    </ul>
-    <p><em>Note: Session ID will change after successful login</em></p>
-    '''
+    return render_template('secure_login.html')
 
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session or not session.get('authenticated'):
         return redirect(url_for('login'))
     
-    return f'''
-    <h2>Welcome {session['user_id']}!</h2>
-    <p>Login time: {session['login_time']}</p>
-    <p><strong>Session Data:</strong> {dict(session)}</p>
-    <p style="color: green;">✅ Session fixation attack prevented!</p>
-    <a href="/logout">Logout</a>
-    '''
+    session_data = dict(session)
+    return render_template('secure_dashboard.html', session_data=session_data)
 
 @app.route('/logout')
 def logout():
