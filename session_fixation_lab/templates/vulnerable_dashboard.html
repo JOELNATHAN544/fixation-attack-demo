@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Vulnerable App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Welcome {{ session.user_id }}!</h1>
+            <h2>Vulnerable Dashboard</h2>
+        </div>
+        
+        <div class="status vulnerable">
+            🚨 Session Fixation Vulnerability Active
+        </div>
+        
+        <div class="dashboard-info">
+            <p><strong>Login Time:</strong> {{ session.login_time }}</p>
+            <p><strong>User ID:</strong> {{ session.user_id }}</p>
+            <p><strong>Session Status:</strong> Active</p>
+        </div>
+        
+        <div class="alert alert-danger">
+            <strong>Security Vulnerability:</strong> This session is vulnerable to session fixation attacks. 
+            The session ID remains the same after login, allowing attackers to hijack user sessions.
+        </div>
+        
+        <div class="session-data">
+            <strong>Session Data:</strong><br>
+            {{ session_data }}
+        </div>
+        
+        <div class="demo-info">
+            <h3>🔍 Session Fixation Demo</h3>
+            <p>This dashboard demonstrates a session fixation vulnerability:</p>
+            <ul>
+                <li>Session ID remains constant after login</li>
+                <li>Attacker can capture session ID before login</li>
+                <li>Victim logs in using attacker's session ID</li>
+                <li>Attacker can access victim's authenticated session</li>
+            </ul>
+        </div>
+        
+        <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html> 
