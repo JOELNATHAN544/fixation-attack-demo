@@ -43,6 +43,12 @@
             <strong>Security Feature:</strong> This application implements session regeneration to prevent session fixation attacks. 
             Session IDs change after login, making it secure against session hijacking.
         </div>
+        
+        <div class="session-info">
+            <h3>🔍 Current Session ID (Before Login)</h3>
+            <code>{{ session_id }}</code>
+            <p><small>This session ID will change after login (secure!)</small></p>
+        </div>
     </div>
     
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
