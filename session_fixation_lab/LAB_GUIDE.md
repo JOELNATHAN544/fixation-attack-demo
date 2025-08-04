@@ -115,6 +115,35 @@ This will automatically test both apps and show the differences.
    - Attacker can now access `http://localhost:5000/dashboard` with session `abc123`
    - Attacker has access to victim's session
 
+### Exercise 4: Cookie Security Analysis (NEW!)
+
+#### Run the Cookie Security Test:
+```bash
+python3 simple_cookie_test.py
+```
+
+This will show:
+- HttpOnly flag differences between apps
+- Security assessment for each app
+- XSS protection demonstrations
+
+#### Manual Browser Testing:
+1. **Clear browser cookies** for localhost
+2. **Visit vulnerable app**: http://localhost:5000/login
+3. **Login and check cookies** in developer tools
+4. **Visit secure app**: http://localhost:5001/login  
+5. **Login and compare cookies** in developer tools
+6. **Look for 'session' cookies** (not 'KC_AUTH_SESSION_HASH')
+
+#### Manual Cookie Analysis:
+1. **Open browser developer tools** (F12)
+2. **Go to Application/Storage tab**
+3. **Visit both applications** and check cookies
+4. **Compare cookie attributes**:
+   - HttpOnly flag presence
+   - SameSite value
+   - Secure flag status
+
 ## Code Analysis
 
 ### Vulnerable Code (vulnerable_app.py):
@@ -158,6 +187,32 @@ if 'user_id' not in session or not session.get('authenticated'):
 session.clear()  # Remove all session data
 ```
 
+### 5. Cookie Security Flags (NEW!)
+
+#### HttpOnly Flag
+```python
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevents JavaScript access
+```
+- **Purpose**: Prevents XSS attacks from stealing session cookies
+- **How it works**: JavaScript cannot access HttpOnly cookies
+- **Protection**: `document.cookie` won't show HttpOnly cookies
+
+#### SameSite Flag
+```python
+app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'  # Prevents cross-site requests
+```
+- **Purpose**: Prevents CSRF attacks and session fixation
+- **How it works**: Cookies only sent for same-site requests
+- **Protection**: Cross-site requests cannot use session cookies
+- **Note**: `SameSite=None` requires HTTPS (`Secure=True`). For HTTP localhost, browsers use `Lax` as default.
+
+#### Secure Flag (for production)
+```python
+app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS only (in production)
+```
+- **Purpose**: Ensures cookies only sent over HTTPS
+- **Note**: Set to False for localhost development
+
 ## Testing Checklist
 
 ### Vulnerable App (Should FAIL):
@@ -165,6 +220,8 @@ session.clear()  # Remove all session data
 - [ ] Attacker can access victim's session
 - [ ] No session regeneration
 - [ ] Weak secret key
+- [ ] HttpOnly: False (vulnerable to XSS) ✅ CONFIRMED WORKING
+- [ ] SameSite: Lax (moderate CSRF protection) ✅ CONFIRMED WORKING
 
 ### Secure App (Should PASS):
 - [ ] Session ID changes after login
@@ -172,6 +229,8 @@ session.clear()  # Remove all session data
 - [ ] Session regeneration implemented
 - [ ] Strong secret key
 - [ ] Session validation
+- [ ] HttpOnly: True (protected from XSS) ✅ CONFIRMED WORKING
+- [ ] SameSite: Strict (protected from CSRF) ⚠️ May not show in tests
 
 ## Next Steps
 After completing this lab, you should understand:
