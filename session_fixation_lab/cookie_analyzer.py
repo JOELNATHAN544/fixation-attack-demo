@@ -121,6 +121,45 @@ class CookieAnalyzer:
         print(f"Session ID: {login_session}")
         print(f"If this session ID doesn't change after logout/login,")
         print(f"it indicates session fixation vulnerability.")
+    
+    def analyze_cookie_security(self):
+        """Analyze cookie security features (HttpOnly, SameSite)."""
+        print("\n🔒 COOKIE SECURITY ANALYSIS")
+        print("=" * 50)
+        
+        # Login to create session cookies
+        login_data = {'username': 'admin', 'password': 'admin123'}
+        response = self.session.post(
+            urljoin(self.base_url, '/login'),
+            data=login_data,
+            allow_redirects=True
+        )
+        
+        print(f"Login status: {response.status_code}")
+        
+        # Analyze cookies
+        cookies = self.session.cookies
+        print(f"Cookies found: {len(cookies)}")
+        
+        for cookie in cookies:
+            print(f"\n🍪 Cookie: {cookie.name}")
+            print(f"   HttpOnly: {cookie.has_nonstandard_attr('HttpOnly')}")
+            print(f"   Secure: {cookie.secure}")
+            print(f"   SameSite: {getattr(cookie, 'samesite', 'Not Set')}")
+            
+            # Security assessment
+            if cookie.has_nonstandard_attr('HttpOnly'):
+                print("   ✅ HttpOnly: Protected from XSS")
+            else:
+                print("   ❌ HttpOnly: Vulnerable to XSS")
+            
+            samesite = getattr(cookie, 'samesite', None)
+            if samesite == 'Strict':
+                print("   ✅ SameSite: Strict (CSRF protected)")
+            elif samesite == 'Lax':
+                print("   ⚠️  SameSite: Lax (moderate protection)")
+            else:
+                print("   ❌ SameSite: None (CSRF vulnerable)")
 
 def main():
     print("🍪 Cookie Analyzer - Session Fixation Demo")
@@ -132,6 +171,7 @@ def main():
     
     try:
         vulnerable_analyzer.demonstrate_session_fixation()
+        vulnerable_analyzer.analyze_cookie_security()
     except Exception as e:
         print(f"Error testing vulnerable app: {e}")
         print("Make sure vulnerable_app.py is running on port 5000")
@@ -172,6 +212,9 @@ def main():
         else:
             print(f"❌ Session ID unchanged: {session1}")
             print("❌ Still vulnerable to session fixation!")
+        
+        # Analyze cookie security
+        secure_analyzer.analyze_cookie_security()
                 
     except Exception as e:
         print(f"Error testing secure app: {e}")
