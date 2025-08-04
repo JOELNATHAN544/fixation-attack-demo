@@ -120,6 +120,17 @@ session_fixation_lab/
 - Demonstrates attack scenarios
 - Provides detailed analysis reports
 
+### 🔒 Cookie Security Demo (`cookie_security_demo.py`) - NEW!
+
+**Purpose**: Demonstrates SameSite and HttpOnly cookie security
+
+**Features**:
+- Analyzes cookie security configurations
+- Shows HttpOnly flag differences
+- Demonstrates SameSite protection
+- Provides security scoring
+- Educational demonstrations of XSS/CSRF protection
+
 ## 🎓 Learning Scenarios
 
 ### Scenario 1: Understanding the Vulnerability
@@ -148,6 +159,18 @@ session_fixation_lab/
 2. **Review the results**:
    - Vulnerable app: Session ID unchanged
    - Secure app: Session ID regenerated
+
+### Scenario 4: Cookie Security Analysis (NEW!)
+
+1. **Run the cookie security demo**:
+   ```bash
+   python cookie_security_demo.py
+   ```
+2. **Review the security analysis**:
+   - HttpOnly flag protection
+   - SameSite flag configurations
+   - Security scoring comparison
+   - XSS and CSRF demonstrations
 
 ## 🛡️ Security Concepts
 
@@ -179,6 +202,9 @@ session_fixation_lab/
 - Use strong session secrets
 - Implement proper session timeouts
 - Use secure session storage
+- Set HttpOnly flag on session cookies
+- Use SameSite=Strict for maximum security
+- Use Secure flag in production (HTTPS)
 
 ## 🎨 UI Features
 
