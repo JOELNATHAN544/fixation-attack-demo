@@ -43,6 +43,12 @@
             <strong>Security Warning:</strong> This application demonstrates session fixation vulnerability. 
             Session IDs remain the same after login, making it vulnerable to attacks.
         </div>
+        
+        <div class="session-info">
+            <h3>🔍 Current Session ID (Before Login)</h3>
+            <code>{{ session_id }}</code>
+            <p><small>This session ID will remain the same after login (vulnerable!)</small></p>
+        </div>
     </div>
     
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
