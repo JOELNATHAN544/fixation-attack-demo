@@ -4,14 +4,24 @@ VULNERABLE Flask App - Demonstrates Session Fixation Attack
 DO NOT USE IN PRODUCTION!
 """
 
-from flask import Flask, request, session, redirect, url_for, render_template
+from flask import Flask, request, session, redirect, url_for, render_template, make_response
 from flask_session import Session
 import bcrypt
 
 app = Flask(__name__)
 app.secret_key = 'vulnerable_secret_key'  # Weak secret key
 app.config['SESSION_TYPE'] = 'filesystem'
+
+# VULNERABLE: Missing or weak cookie security configurations
+app.config['SESSION_COOKIE_HTTPONLY'] = False  # Allows JavaScript access
+app.config['SESSION_COOKIE_SAMESITE'] = None   # Allows cross-site requests
+app.config['SESSION_COOKIE_SECURE'] = False    # Allows HTTP transmission
+
 Session(app)
+
+# Override Flask-Session defaults for vulnerable app
+app.config['SESSION_COOKIE_HTTPONLY'] = False
+app.config['SESSION_COOKIE_SAMESITE'] = None
 
 # Simple user database
 USERS = {
@@ -40,11 +50,27 @@ def login():
             session['login_time'] = '2025-01-15T10:30:00Z'
             
             print(f"[VULNERABLE] User {username} logged in")
-            return redirect(url_for('dashboard'))
+            response = redirect(url_for('dashboard'))
+            
+            # Force vulnerable cookie settings by overriding Flask-Session
+            response.delete_cookie('session')  # Remove Flask-Session cookie
+            response.set_cookie('session', session.sid, 
+                              httponly=False, 
+                              samesite='Lax',  # Use Lax instead of None for HTTP
+                              secure=False,
+                              max_age=3600,
+                              domain='localhost')
+            return response
         else:
             return "Invalid credentials"
     
-    return render_template('vulnerable_login.html')
+    # Create a session ID before login to demonstrate the vulnerability
+    session['pre_login'] = 'true'
+    session.modified = True
+    
+    # Pass session ID to template for display
+    session_id = session.sid if hasattr(session, 'sid') else 'No session ID'
+    return render_template('vulnerable_login.html', session_id=session_id)
 
 @app.route('/dashboard')
 def dashboard():
