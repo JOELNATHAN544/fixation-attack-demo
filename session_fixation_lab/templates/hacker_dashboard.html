@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎭 Hacker Dashboard - Session Fixation Lab</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #ff0000;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        .warning {
+            background: #ff0000;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .stolen-sessions {
+            background: #000;
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .session-item {
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .session-id {
+            font-family: monospace;
+            color: #ffff00;
+            font-size: 12px;
+        }
+        .user-info {
+            color: #00ffff;
+        }
+        .login-form {
+            background: #000;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ff00;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        button {
+            background: #ff0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #cc0000;
+        }
+        .status {
+            color: #ffff00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 HACKER DASHBOARD</h1>
+            <p>Session Fixation Attack Control Center</p>
+        </div>
+
+        <div class="warning">
+            ⚠️ WARNING: This is a DEMONSTRATION of malicious activity for educational purposes only! ⚠️
+        </div>
+
+        <div class="stolen-sessions">
+            <h2>📋 Available Stolen Session IDs</h2>
+            <p>These session IDs were stolen from the vulnerable application:</p>
+            
+            {% for session_id, user_data in stolen_sessions.items() %}
+            <div class="session-item">
+                <div>
+                    <div class="session-id">{{ session_id }}</div>
+                    <div class="user-info">
+                        <strong>User:</strong> {{ user_data.username }} ({{ user_data.role }})
+                        <br>
+                        <strong>Email:</strong> {{ user_data.email }}
+                        <br>
+                        <strong>Stolen from:</strong> {{ user_data.stolen_from }}
+                        <br>
+                        <strong>Stolen time:</strong> {{ user_data.stolen_time }}
+                    </div>
+                </div>
+                <div>
+                    <form action="/login" method="POST" style="display: inline;">
+                        <input type="hidden" name="session_id" value="{{ session_id }}">
+                        <button type="submit">🎭 Login as {{ user_data.username }}</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="login-form">
+            <h2>🔑 Manual Session ID Login</h2>
+            <p>Enter a stolen session ID to impersonate the user:</p>
+            
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="session_id">Stolen Session ID:</label>
+                    <input type="text" id="session_id" name="session_id" 
+                           placeholder="Enter stolen session ID here..." required>
+                </div>
+                <button type="submit">🎭 Login with Stolen Session</button>
+            </form>
+        </div>
+
+        <div class="status">
+            <h3>🎯 Attack Status</h3>
+            <p>✅ Session fixation attack simulation ready</p>
+            <p>✅ Stolen session IDs available</p>
+            <p>✅ Ready to impersonate users</p>
+        </div>
+    </div>
+</body>
+</html> 
