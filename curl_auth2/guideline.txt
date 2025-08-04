@@ -1,0 +1,30 @@
+# OAuth 2.0 Flows Implementation Guide
+
+## Project Objective
+Gain a practical understanding of the different OAuth 2.0 flows by reproducing them step-by-step using `curl` commands — without relying on SDKs or libraries.
+
+## Tools Required
+- Terminal with `curl` installed
+- Any OAuth2-compliant Identity Provider (e.g. Keycloak, Auth0, or mock server like `https://oidcdebugger.com`)
+- A test client and a test user (provided by the instructor or set up yourself)
+
+## Flows to Implement
+
+### 1. Authorization Code Flow
+### 2. Authorization Code Flow with PKCE
+### 3. Client Credentials Flow
+### 4. Resource Owner Password Credentials (ROPC) Flow
+### 5. (Optional/Bonus): Device Authorization Flow
+
+## Expected Deliverables
+Each student must submit:
+- A Markdown file (oauth2-flows.md) or PDF with:
+  - Step-by-step curl commands per flow
+  - Responses (formatted JSON, tokens, status codes)
+  - A brief explanation of what happened at each step
+- Optional: A shell script that automates one or more flows
+
+## Success Criteria
+- Proper understanding of when and how each flow is used
+- Successful reproduction of at least 3 flows
+- Ability to explain the security model behind each flow
