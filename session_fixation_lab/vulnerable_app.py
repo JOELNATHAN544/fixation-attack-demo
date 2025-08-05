@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-VULNERABLE Flask App - Demonstrates Session Fixation Attack
+HACKER'S MALICIOUS LOGIN PAGE - Session Fixation Attack
+This looks like the bank login but is actually the attacker's fake page.
 DO NOT USE IN PRODUCTION!
 """
 
@@ -9,7 +10,7 @@ from flask_session import Session
 import bcrypt
 
 app = Flask(__name__)
-app.secret_key = 'vulnerable_secret_key'  # Weak secret key
+app.secret_key = 'hacker_secret_key'  # Weak secret key
 app.config['SESSION_TYPE'] = 'filesystem'
 
 # VULNERABLE: Missing or weak cookie security configurations
@@ -23,10 +24,11 @@ Session(app)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = None
 
-# Simple user database
-USERS = {
-    'admin': bcrypt.hashpw('admin123'.encode('utf-8'), bcrypt.gensalt(rounds=12)),
-    'user1': bcrypt.hashpw('password123'.encode('utf-8'), bcrypt.gensalt(rounds=12))
+# Fake user database (hacker's fake credentials)
+FAKE_USERS = {
+    'john': bcrypt.hashpw('john123'.encode('utf-8'), bcrypt.gensalt(rounds=12)),
+    'alice': bcrypt.hashpw('alice123'.encode('utf-8'), bcrypt.gensalt(rounds=12)),
+    'bob': bcrypt.hashpw('bob123'.encode('utf-8'), bcrypt.gensalt(rounds=12))
 }
 
 def verify_password(password, hashed):
@@ -35,34 +37,38 @@ def verify_password(password, hashed):
 @app.route('/')
 def index():
     if 'user_id' in session:
-        return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
+        return redirect(url_for('fake_dashboard'))
+    return redirect(url_for('fake_login'))
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def fake_login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         
-        if username in USERS and verify_password(password, USERS[username]):
+        if username in FAKE_USERS and verify_password(password, FAKE_USERS[username]):
             # VULNERABLE: Session ID remains the same - SESSION FIXATION!
+            # The session ID was set before login and remains unchanged
             session['user_id'] = username
             session['login_time'] = '2025-01-15T10:30:00Z'
+            session['fake_login'] = True
             
-            print(f"[VULNERABLE] User {username} logged in")
-            response = redirect(url_for('dashboard'))
+            print(f"[HACKER] Victim {username} logged in with existing session ID")
+            print(f"[HACKER] Session ID unchanged: {session.sid if hasattr(session, 'sid') else 'Unknown'}")
+            print(f"[HACKER] Now hacker can use this session ID to access victim's bank account!")
             
-            # Force vulnerable cookie settings by overriding Flask-Session
-            response.delete_cookie('session')  # Remove Flask-Session cookie
-            response.set_cookie('session', session.sid, 
-                              httponly=False, 
-                              samesite='Lax',  # Use Lax instead of None for HTTP
-                              secure=False,
-                              max_age=3600,
-                              domain='localhost')
-            return response
+            return redirect(url_for('fake_dashboard'))
         else:
             return "Invalid credentials"
+    
+    # VULNERABLE: Allow session ID to be set via URL parameter
+    # This simulates an attacker setting a session ID
+    session_id_param = request.args.get('session_id')
+    if session_id_param:
+        print(f"[HACKER] Session ID set via URL parameter: {session_id_param}")
+        print(f"[HACKER] Victim will use this session ID when they log in")
+        # In a real attack, the hacker would set this session ID
+        # and the victim would unknowingly use it
     
     # Create a session ID before login to demonstrate the vulnerability
     session['pre_login'] = 'true'
@@ -73,21 +79,21 @@ def login():
     return render_template('vulnerable_login.html', session_id=session_id)
 
 @app.route('/dashboard')
-def dashboard():
+def fake_dashboard():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('fake_login'))
     
     session_data = dict(session)
     return render_template('vulnerable_dashboard.html', session_data=session_data)
 
 @app.route('/logout')
-def logout():
+def fake_logout():
     session.clear()
-    return redirect(url_for('login'))
+    return redirect(url_for('fake_login'))
 
 if __name__ == '__main__':
-    print("🚨 VULNERABLE APP STARTING 🚨")
-    print("This app demonstrates session fixation vulnerability")
-    print("Access the app at: http://localhost:5000")
+    print("🚨 HACKER'S MALICIOUS LOGIN PAGE STARTING 🚨")
+    print("This looks like the bank but is actually the attacker's fake page!")
+    print("Access the fake login at: http://localhost:5000/login")
     print("Session ID will remain the same after login!")
     app.run(debug=True, host='0.0.0.0', port=5000) 
