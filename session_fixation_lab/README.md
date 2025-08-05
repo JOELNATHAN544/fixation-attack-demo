@@ -40,6 +40,8 @@ session_fixation_lab/
 
 - Python 3.8+
 - pip (Python package manager)
+- Docker (via multipass k3s instance)
+- Multipass with k3s instance running
 
 ### Installation
 
@@ -49,38 +51,52 @@ session_fixation_lab/
    cd session_fixation_lab
    ```
 
-3. **Create virtual environment**:
+3. **Run the setup script**:
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   chmod +x setup.sh
+   ./setup.sh
    ```
 
-4. **Install dependencies**:
-   ```bash
-   pip install flask flask-session bcrypt requests
-   ```
+   This will:
+   - Build PostgreSQL Docker image
+   - Start PostgreSQL container in multipass k3s instance
+   - Create Python virtual environment
+   - Install all dependencies
 
 ### Running the Lab
 
-1. **Start the vulnerable app** (Terminal 1):
+1. **Start the bank app** (Terminal 1):
+   ```bash
+   source venv/bin/activate
+   python bank_app.py
+   ```
+   - Access at: http://localhost:5001/bank/login
+
+2. **Start the hacker app** (Terminal 2):
    ```bash
    source venv/bin/activate
    python vulnerable_app.py
    ```
-   - Access at: http://localhost:5000
+   - Access at: http://localhost:5000/login
 
-2. **Start the secure app** (Terminal 2):
+3. **Create a user account**:
+   - Visit: http://localhost:5001/bank/register
+   - Register with username/password
+   - Login to bank account
+
+4. **Test session fixation**:
    ```bash
    source venv/bin/activate
-   python secure_app.py
+   python simple_session_fixation_demo.py
    ```
-   - Access at: http://localhost:5001
 
-3. **Run automated tests** (Terminal 3):
-   ```bash
-   source venv/bin/activate
-   python cookie_analyzer.py
-   ```
+### Cleanup
+
+To stop and remove the PostgreSQL container:
+```bash
+chmod +x cleanup.sh
+./cleanup.sh
+```
 
 ## 🔍 Lab Components
 
