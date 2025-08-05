@@ -29,6 +29,7 @@ session_fixation_lab/
 ├── vulnerable_app.py              # Vulnerable Flask application
 ├── secure_app.py                  # Secure Flask application
 ├── cookie_analyzer.py             # Automated testing tool
+├── session_fixation_demo.py       # Real session fixation attack demo
 ├── LAB_GUIDE.md                  # Detailed lab instructions
 └── README.md                     # This file
 ```
@@ -120,6 +121,17 @@ session_fixation_lab/
 - Demonstrates attack scenarios
 - Provides detailed analysis reports
 
+### 🎯 Session Fixation Demo (`session_fixation_demo.py`) - NEW!
+
+**Purpose**: Properly demonstrates session fixation attack mechanism
+
+**Features**:
+- Shows real session fixation attack flow
+- Demonstrates attacker capturing session before login
+- Shows victim using attacker's session ID
+- Proves session hijacking vulnerability
+- Compares vulnerable vs secure implementations
+
 ### 🔒 Cookie Security Demo (`cookie_security_demo.py`) - NEW!
 
 **Purpose**: Demonstrates SameSite and HttpOnly cookie security
@@ -160,7 +172,19 @@ session_fixation_lab/
    - Vulnerable app: Session ID unchanged
    - Secure app: Session ID regenerated
 
-### Scenario 4: Cookie Security Analysis (NEW!)
+### Scenario 4: Real Session Fixation Attack (NEW!)
+
+1. **Run the session fixation demo**:
+   ```bash
+   python session_fixation_demo.py
+   ```
+2. **Watch the attack flow**:
+   - Attacker captures session ID before login
+   - Attacker sends malicious link to victim
+   - Victim logs in using attacker's session
+   - Attacker can access victim's authenticated session
+
+### Scenario 5: Cookie Security Analysis (NEW!)
 
 1. **Run the cookie security demo**:
    ```bash
