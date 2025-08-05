@@ -61,14 +61,28 @@ def fake_login():
         else:
             return "Invalid credentials"
     
-    # VULNERABLE: Allow session ID to be set via URL parameter
-    # This simulates an attacker setting a session ID
+    # VULNERABLE: Set session ID from URL parameter
+    # This simulates the hacker setting a specific session ID
     session_id_param = request.args.get('session_id')
     if session_id_param:
-        print(f"[HACKER] Session ID set via URL parameter: {session_id_param}")
+        print(f"[HACKER] Setting session ID from URL parameter: {session_id_param}")
         print(f"[HACKER] Victim will use this session ID when they log in")
-        # In a real attack, the hacker would set this session ID
-        # and the victim would unknowingly use it
+        
+        # Create a response with the hacker's session ID
+        response = make_response(render_template('vulnerable_login.html', session_id=session_id_param))
+        
+        # Clear any existing session cookies first
+        response.delete_cookie('session', domain='localhost')
+        
+        # Set the session cookie to the hacker's session ID
+        response.set_cookie('session', session_id_param, 
+                          httponly=False, 
+                          samesite=None,
+                          secure=False,
+                          max_age=3600,
+                          domain='localhost')
+        
+        return response
     
     # Create a session ID before login to demonstrate the vulnerability
     session['pre_login'] = 'true'
