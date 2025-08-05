@@ -121,7 +121,7 @@ class CookieAnalyzer:
         print(f"Session ID: {login_session}")
         print(f"If this session ID doesn't change after logout/login,")
         print(f"it indicates session fixation vulnerability.")
-    
+
     def analyze_cookie_security(self):
         """Analyze cookie security features (HttpOnly, SameSite)."""
         print("\n🔒 COOKIE SECURITY ANALYSIS")
