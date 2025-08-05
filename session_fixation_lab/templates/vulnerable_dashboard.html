@@ -3,50 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Vulnerable App</title>
+    <title>🏦 SecureBank - Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="dashboard">
-        <div class="header">
-            <h1>Welcome {{ session.user_id }}!</h1>
-            <h2>Vulnerable Dashboard</h2>
+    <div class="container">
+        <div class="dashboard-card">
+            <div class="header">
+                <h1>🏦 SecureBank Dashboard</h1>
+                <p class="subtitle">Welcome, {{ session_data.user_id }}!</p>
+                <div class="status-badge vulnerable">🚨 HACKER'S FAKE PAGE</div>
+            </div>
+            
+            <div class="alert alert-danger">
+                <strong>⚠️ WARNING:</strong> This is the HACKER'S FAKE DASHBOARD!
+                <br>The victim thinks they're logged into the bank, but they're actually on the hacker's site.
+            </div>
+            
+            <div class="fake-account-info">
+                <h2>💰 Fake Account Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Account Holder:</label>
+                        <span>{{ session_data.user_id }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Number:</label>
+                        <span>FAKE-1234-5678</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Current Balance:</label>
+                        <span class="balance">$0.00</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Type:</label>
+                        <span>Fake Account</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="session-info">
+                <h3>🔍 Session Information (VULNERABLE)</h3>
+                <div class="session-data">
+                    <p><strong>Session ID:</strong> {{ session_data.get('_id', 'Hidden') }}</p>
+                    <p><strong>Login Time:</strong> {{ session_data.get('login_time', 'N/A') }}</p>
+                    <p><strong>Fake Login:</strong> {{ session_data.get('fake_login', False) }}</p>
+                </div>
+                <p class="warning">🚨 This session ID did NOT change after login!</p>
+                <p class="warning">🎯 Hacker can now use this session ID to access the victim's real bank account!</p>
+            </div>
+            
+            <div class="security-warning">
+                <h3>🚨 Security Vulnerabilities:</h3>
+                <ul>
+                    <li>❌ Session ID not regenerated after login</li>
+                    <li>❌ HttpOnly cookies disabled</li>
+                    <li>❌ SameSite protection disabled</li>
+                    <li>❌ Weak session secrets</li>
+                </ul>
+            </div>
+            
+            <div class="actions">
+                <a href="{{ url_for('fake_logout') }}" class="btn btn-danger">Logout</a>
+            </div>
         </div>
-        
-        <div class="status vulnerable">
-            🚨 Session Fixation Vulnerability Active
-        </div>
-        
-        <div class="dashboard-info">
-            <p><strong>Login Time:</strong> {{ session.login_time }}</p>
-            <p><strong>User ID:</strong> {{ session.user_id }}</p>
-            <p><strong>Session Status:</strong> Active</p>
-        </div>
-        
-        <div class="alert alert-danger">
-            <strong>Security Vulnerability:</strong> This session is vulnerable to session fixation attacks. 
-            The session ID remains the same after login, allowing attackers to hijack user sessions.
-        </div>
-        
-        <div class="session-data">
-            <strong>Session Data:</strong><br>
-            {{ session_data }}
-        </div>
-        
-        <div class="demo-info">
-            <h3>🔍 Session Fixation Demo</h3>
-            <p>This dashboard demonstrates a session fixation vulnerability:</p>
-            <ul>
-                <li>Session ID remains constant after login</li>
-                <li>Attacker can capture session ID before login</li>
-                <li>Victim logs in using attacker's session ID</li>
-                <li>Attacker can access victim's authenticated session</li>
-            </ul>
-        </div>
-        
-        <a href="/logout" class="btn btn-danger">Logout</a>
     </div>
-    
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html> 
