@@ -15,6 +15,16 @@
                 <div class="status-badge secure">🔒 SECURE BANK</div>
             </div>
             
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
             <form method="POST" class="login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -29,13 +39,8 @@
                 <button type="submit" class="btn btn-primary">Login to Bank</button>
             </form>
             
-            <div class="test-accounts">
-                <h3>Test Accounts:</h3>
-                <ul>
-                    <li><strong>john</strong> / john123</li>
-                    <li><strong>alice</strong> / alice123</li>
-                    <li><strong>bob</strong> / bob123</li>
-                </ul>
+            <div class="register-link">
+                <p>Don't have an account? <a href="{{ url_for('bank_register') }}">Register here</a></p>
             </div>
             
             <div class="security-info">
@@ -46,6 +51,11 @@
                     <li>✅ SameSite=Strict protection</li>
                     <li>✅ Strong session secrets</li>
                 </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
             </div>
         </div>
     </div>
