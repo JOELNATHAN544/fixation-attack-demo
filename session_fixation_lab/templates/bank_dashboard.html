@@ -50,7 +50,7 @@
             <div class="session-info">
                 <h3>🔍 Session Information</h3>
                 <div class="session-data">
-                    <p><strong>Session ID:</strong> {{ session_data.get('_id', 'Hidden for security') }}</p>
+                    <p><strong>Session ID:</strong> Hidden for security</p>
                     <p><strong>Login Time:</strong> {{ session_data.get('login_time', 'N/A') }}</p>
                     <p><strong>Authenticated:</strong> {{ session_data.get('authenticated', False) }}</p>
                 </div>
@@ -63,16 +63,6 @@
                     <li>✅ HttpOnly cookies enabled</li>
                     <li>✅ SameSite=Strict protection</li>
                     <li>✅ Secure session management</li>
-                </ul>
-            </div>
-            
-            <div class="actions">
-                <a href="{{ url_for('bank_logout') }}" class="btn btn-danger">Logout</a>
-            </div>
-        </div>
-    </div>
-</body>
-</html> 
                 </ul>
             </div>
             
