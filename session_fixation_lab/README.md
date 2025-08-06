@@ -1,359 +1,227 @@
 # 🍪 Session Fixation Attack Lab
 
-A comprehensive educational lab demonstrating session fixation vulnerabilities and their prevention using Flask applications with professional UI.
+A comprehensive educational lab demonstrating session fixation vulnerabilities using Flask applications with PostgreSQL database and professional UI.
 
 ## 📋 Overview
 
-This lab provides hands-on experience with session fixation attacks, a critical web security vulnerability. You'll learn how attackers can hijack user sessions and how to prevent these attacks through proper session management.
+This lab provides hands-on experience with session fixation attacks, a critical web security vulnerability. You'll learn how attackers can hijack user sessions by setting a fixed session ID that victims unknowingly use when logging in.
 
 ## 🎯 Learning Objectives
 
 - **Understand** session fixation attack mechanisms
-- **Identify** vulnerable session management practices
-- **Implement** secure session regeneration techniques
-- **Test** both vulnerable and secure implementations
-- **Analyze** session behavior using automated tools
+- **Experience** a real-world attack scenario with bank login simulation
+- **Analyze** how session IDs can be manipulated by attackers
+- **Learn** the difference between vulnerable and secure session management
+- **Test** automated attack demonstrations
 
 ## 🏗️ Project Structure
 
 ```
 session_fixation_lab/
-├── static/
+├── 📁 static/
 │   ├── css/style.css              # Professional UI styling
-│   └── js/app.js                  # Interactive features
-├── templates/
-│   ├── vulnerable_login.html      # Vulnerable app login
-│   ├── vulnerable_dashboard.html  # Vulnerable app dashboard
-│   ├── secure_login.html          # Secure app login
-│   └── secure_dashboard.html      # Secure app dashboard
-├── vulnerable_app.py              # Vulnerable Flask application
-├── secure_app.py                  # Secure Flask application
-├── cookie_analyzer.py             # Automated testing tool
-├── session_fixation_demo.py       # Real session fixation attack demo
-├── LAB_GUIDE.md                  # Detailed lab instructions
-└── README.md                     # This file
+│   └── js/app.js                  # Interactive JavaScript features
+├── 📁 templates/
+│   ├── bank_login.html            # Bank app login page
+│   ├── bank_dashboard.html        # Bank app dashboard
+│   ├── bank_register.html         # Bank app registration
+│   ├── vulnerable_login.html      # Hacker's malicious site login
+│   └── vulnerable_dashboard.html  # Hacker's malicious site dashboard
+├── 📱 **Core Applications:**
+│   ├── bank_app.py                # 🏦 Legitimate Bank Application (PORT 5000)
+│   ├── vulnerable_app.py          # 🎭 Hacker's Malicious Site (PORT 5001)
+│   └── database.py                # 🗄️ PostgreSQL Database Operations
+├── 🔧 **Setup & Demo:**
+│   ├── setup_fish.sh              # 🐟 Environment setup script
+│   ├── cleanup_fish.sh            # 🧹 Cleanup script
+│   ├── test_db.py                 # 🧪 Database connection test
+│   └── bank_session_fixation_demo.py # 🤖 Automated attack demo
+├── 🐳 **Infrastructure:**
+│   ├── Dockerfile                 # PostgreSQL database setup
+│   └── requirements.txt           # Python dependencies
+└── 📚 README.md                   # This documentation
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.8+
-- pip (Python package manager)
-- Docker (via multipass k3s instance)
-- Multipass with k3s instance running
+- **Python 3.8+** with pip
+- **Multipass** with `k3s` instance running
+- **Docker** access via multipass (using alias)
 
-### Installation
+### 1️⃣ **Setup Environment**
 
-1. **Clone or download** this project
-2. **Navigate** to the project directory:
-   ```bash
-   cd session_fixation_lab
-   ```
-
-3. **Run the setup script**:
-   ```bash
-   chmod +x setup.sh
-   ./setup.sh
-   ```
-
-   This will:
-   - Build PostgreSQL Docker image
-   - Start PostgreSQL container in multipass k3s instance
-   - Create Python virtual environment
-   - Install all dependencies
-
-### Running the Lab
-
-1. **Start the bank app** (Terminal 1):
-   ```bash
-   source venv/bin/activate
-   python bank_app.py
-   ```
-   - Access at: http://localhost:5001/bank/login
-
-2. **Start the hacker app** (Terminal 2):
-   ```bash
-   source venv/bin/activate
-   python vulnerable_app.py
-   ```
-   - Access at: http://localhost:5000/login
-
-3. **Create a user account**:
-   - Visit: http://localhost:5001/bank/register
-   - Register with username/password
-   - Login to bank account
-
-4. **Test session fixation**:
-   ```bash
-   source venv/bin/activate
-   python simple_session_fixation_demo.py
-   ```
-
-### Cleanup
-
-To stop and remove the PostgreSQL container:
 ```bash
-chmod +x cleanup.sh
-./cleanup.sh
+cd session_fixation_lab
+
+# Make scripts executable
+chmod +x setup_fish.sh cleanup_fish.sh
+
+# Run setup (creates database, virtual environment, installs dependencies)
+./setup_fish.sh
 ```
 
-## 🔍 Lab Components
-
-### 🚨 Vulnerable Application (`vulnerable_app.py`)
-
-**Purpose**: Demonstrates session fixation vulnerability
-
-**Key Features**:
-- Session ID remains constant after login
-- Demonstrates exploitable session management
-- Professional UI with security warnings
-
-**Test Accounts**:
-- `admin` / `admin123`
-- `user1` / `password123`
-
-### 🔒 Secure Application (`secure_app.py`)
-
-**Purpose**: Shows how to prevent session fixation attacks
-
-**Key Features**:
-- Session regeneration after login
-- Secure session management practices
-- Professional UI with security indicators
-
-**Security Measures**:
-- `session.clear()` before login
-- New session ID generation
-- Proper session data handling
-
-### 🍪 Cookie Analyzer (`cookie_analyzer.py`)
-
-**Purpose**: Automated testing and demonstration tool
-
-**Features**:
-- Tests both vulnerable and secure apps
-- Compares session ID behavior
-- Demonstrates attack scenarios
-- Provides detailed analysis reports
-
-### 🎯 Session Fixation Demo (`session_fixation_demo.py`) - NEW!
-
-**Purpose**: Properly demonstrates session fixation attack mechanism
-
-**Features**:
-- Shows real session fixation attack flow
-- Demonstrates attacker capturing session before login
-- Shows victim using attacker's session ID
-- Proves session hijacking vulnerability
-- Compares vulnerable vs secure implementations
-
-### 🔒 Cookie Security Demo (`cookie_security_demo.py`) - NEW!
-
-**Purpose**: Demonstrates SameSite and HttpOnly cookie security
-
-**Features**:
-- Analyzes cookie security configurations
-- Shows HttpOnly flag differences
-- Demonstrates SameSite protection
-- Provides security scoring
-- Educational demonstrations of XSS/CSRF protection
-
-## 🎓 Learning Scenarios
-
-### Scenario 1: Understanding the Vulnerability
-
-1. **Start both applications**
-2. **Visit vulnerable app**: http://localhost:5000/login
-3. **Note the session behavior**:
-   - Session ID remains the same after login
-   - Attacker can capture session before login
-   - Victim logs in using attacker's session
-
-### Scenario 2: Testing Prevention
-
-1. **Visit secure app**: http://localhost:5001/login
-2. **Observe secure behavior**:
-   - Session ID changes after login
-   - Old session data is cleared
-   - New session ID is generated
-
-### Scenario 3: Automated Analysis
-
-1. **Run the cookie analyzer**:
-   ```bash
-   python cookie_analyzer.py
-   ```
-2. **Review the results**:
-   - Vulnerable app: Session ID unchanged
-   - Secure app: Session ID regenerated
-
-### Scenario 4: Real Session Fixation Attack (NEW!)
-
-1. **Run the session fixation demo**:
-   ```bash
-   python session_fixation_demo.py
-   ```
-2. **Watch the attack flow**:
-   - Attacker captures session ID before login
-   - Attacker sends malicious link to victim
-   - Victim logs in using attacker's session
-   - Attacker can access victim's authenticated session
-
-### Scenario 5: Cookie Security Analysis (NEW!)
-
-1. **Run the cookie security demo**:
-   ```bash
-   python cookie_security_demo.py
-   ```
-2. **Review the security analysis**:
-   - HttpOnly flag protection
-   - SameSite flag configurations
-   - Security scoring comparison
-   - XSS and CSRF demonstrations
-
-## 🛡️ Security Concepts
-
-### Session Fixation Attack
-
-**What it is**: An attack where an attacker sets a user's session ID before the user logs in.
-
-**How it works**:
-1. Attacker visits login page and captures session ID
-2. Attacker sends link with session ID to victim
-3. Victim logs in using the provided session ID
-4. Attacker can now access victim's authenticated session
-
-**Why it's dangerous**:
-- Bypasses authentication
-- Allows session hijacking
-- Difficult to detect
-- Common in poorly designed applications
-
-### Prevention Techniques
-
-**Session Regeneration**:
-- Clear old session data before login
-- Generate new session ID after authentication
-- Ensure session ID changes on login
-
-**Best Practices**:
-- Always regenerate session after login
-- Use strong session secrets
-- Implement proper session timeouts
-- Use secure session storage
-- Set HttpOnly flag on session cookies
-- Use SameSite=Strict for maximum security
-- Use Secure flag in production (HTTPS)
-
-## 🎨 UI Features
-
-### Professional Design
-- **Modern gradient backgrounds**
-- **Responsive layout** (mobile-friendly)
-- **Smooth animations** and transitions
-- **Professional color scheme**
-
-### Security Indicators
-- **Status badges** (vulnerable/secure)
-- **Color-coded alerts** (warning/success/danger)
-- **Educational content** explaining concepts
-- **Interactive elements** for better UX
-
-### Enhanced Functionality
-- **Form validation** and loading states
-- **Session data formatting**
-- **Copy functionality** for session IDs
-- **Smooth page transitions**
-
-## 🧪 Testing
-
-### Manual Testing
-
-1. **Browser Testing**:
-   - Open two browser tabs
-   - Visit both applications
-   - Compare session behavior
-   - Test login/logout cycles
-
-2. **Session Analysis**:
-   - Use browser developer tools
-   - Monitor cookie changes
-   - Analyze session data
-
-### Automated Testing
-
-1. **Cookie Analyzer**:
-   ```bash
-   python cookie_analyzer.py
-   ```
-
-2. **Expected Results**:
-   - Vulnerable app: Session ID unchanged
-   - Secure app: Session ID regenerated
-
-## 📚 Educational Resources
-
-### Key Concepts Covered
-- **Session Management**
-- **Cookie Security**
-- **Authentication Flows**
-- **Attack Vectors**
-- **Defense Mechanisms**
-
-### Related Topics
-- **Cross-Site Request Forgery (CSRF)**
-- **Session Hijacking**
-- **Authentication Bypass**
-- **Web Security Best Practices**
-
-## 🔧 Technical Details
-
-### Dependencies
-- **Flask**: Web framework
-- **Flask-Session**: Session management
-- **bcrypt**: Password hashing
-- **requests**: HTTP client for testing
-
-### Architecture
-- **MVC Pattern**: Templates separate from logic
-- **Static Files**: CSS/JS for professional UI
-- **Session Storage**: File-based session storage
-- **Security Headers**: Proper security configurations
-
-## 🚨 Security Notice
-
-⚠️ **Important**: This lab is for educational purposes only. The vulnerable application demonstrates security flaws and should never be used in production environments.
-
-### Safe Usage
-- Use only in controlled, educational environments
-- Never deploy vulnerable code to production
-- Always implement security best practices in real applications
-- Use strong authentication and session management
-
-## 🤝 Contributing
-
-This lab is designed for educational use. If you find issues or have suggestions:
-
-1. **Test thoroughly** before reporting issues
-2. **Provide clear descriptions** of problems
-3. **Include steps to reproduce** issues
-4. **Suggest improvements** for educational value
-
-## 📄 License
-
-This project is for educational purposes. Use responsibly and always follow security best practices in production environments.
-
-## 🎓 Learning Outcomes
-
-After completing this lab, you should be able to:
-
-- ✅ **Identify** session fixation vulnerabilities
-- ✅ **Understand** session management security
-- ✅ **Implement** secure session practices
-- ✅ **Test** session security measures
-- ✅ **Explain** attack and defense mechanisms
+### 2️⃣ **Test Database Connection**
+
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Test database
+python test_db.py
+```
+
+### 3️⃣ **Start Applications**
+
+**Terminal 1 - Bank App (Port 5000):**
+```bash
+source venv/bin/activate
+python bank_app.py
+```
+
+**Terminal 2 - Hacker's Malicious Site (Port 5001):**
+```bash
+source venv/bin/activate
+python vulnerable_app.py
+```
+
+### 4️⃣ **Run Automated Demo**
+
+**Terminal 3 - Attack Demo:**
+```bash
+source venv/bin/activate
+python bank_session_fixation_demo.py
+```
+
+## 🎭 **Attack Scenario**
+
+### **The Setup:**
+1. **🏦 Bank App** (`localhost:5000`) - Legitimate bank with secure session management
+2. **🎭 Hacker's Malicious Site** (`localhost:5001`) - Fake site that captures and reuses session IDs
+
+### **The Attack Flow:**
+
+```mermaid
+sequenceDiagram
+    participant H as 🎭 Hacker
+    participant B as 🏦 Bank App
+    participant V as 👤 Victim
+    participant M as 🎭 Malicious Site
+    
+    Note over H,M: Step 1: Hacker prepares attack
+    H->>B: 1. Visits bank, logs in
+    B->>H: 2. Gets session ID: "abc123"
+    H->>H: 3. Logs out but keeps session ID
+    
+    Note over H,M: Step 2: Hacker tricks victim
+    H->>V: 4. Sends malicious link with session ID
+    Note over V: "Click here to check your bank account!"<br/>localhost:5001/login?session_id=abc123
+    
+    Note over V,M: Step 3: Victim falls into trap
+    V->>M: 5. Clicks link, visits malicious site
+    M->>V: 6. Sets hacker's session ID in browser
+    V->>M: 7. Enters bank credentials on fake site
+    M->>V: 8. "Login successful" (fake confirmation)
+    
+    Note over H,B: Step 4: Hacker hijacks session
+    H->>B: 9. Uses same session ID to access bank
+    B->>H: 10. Welcome! (thinks it's the victim)
+    Note over H: 🎉 Hacker now has access to victim's account!
+```
+
+## 🔍 **Manual Testing**
+
+### **Step 1: Create Bank Account**
+```bash
+# Visit: http://localhost:5000/bank/register
+# Register with: username=victim, password=password123
+```
+
+### **Step 2: Simulate Hacker Getting Session ID**
+```bash
+# Visit: http://localhost:5000/bank/login
+# Login with: username=hacker, password=hacker123
+# Note the session ID in browser dev tools
+# Logout but remember the session ID
+```
+
+### **Step 3: Victim Visits Malicious Link**
+```bash
+# Visit: http://localhost:5001/login?session_id=YOUR_SESSION_ID
+# Login with victim credentials: username=victim, password=password123
+```
+
+### **Step 4: Hacker Hijacks Session**
+```bash
+# Visit: http://localhost:5000/bank/dashboard
+# Use the same session ID from Step 2
+# You should see victim's account information!
+```
+
+## 🔧 **Technical Details**
+
+### **Database Schema**
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### **Key Vulnerability**
+The vulnerable app **does NOT regenerate session IDs** after login:
+```python
+# VULNERABLE - Session ID remains the same
+session['user_id'] = username  # Session ID unchanged!
+```
+
+### **Security Fix**
+The bank app **regenerates session IDs** after login:
+```python
+# SECURE - New session ID generated
+session.clear()  # Clears old session, generates new ID
+session['user_id'] = username  # Fresh session ID
+```
+
+## 🧹 **Cleanup**
+
+```bash
+# Stop all applications (Ctrl+C in each terminal)
+
+# Clean up Docker containers and virtual environment
+./cleanup_fish.sh
+
+# Remove virtual environment if needed
+rm -rf venv/
+```
+
+## 🚨 **Security Warning**
+
+⚠️ **FOR EDUCATIONAL PURPOSES ONLY**
+
+This lab contains intentionally vulnerable code to demonstrate security flaws. **Never use this code in production environments.**
+
+## 🎓 **Learning Outcomes**
+
+After completing this lab, you will understand:
+
+- ✅ How session fixation attacks work in practice
+- ✅ Why session ID regeneration is critical for security
+- ✅ How attackers can exploit predictable session management
+- ✅ The importance of secure session configuration
+- ✅ Real-world attack scenarios and prevention techniques
+
+## 🔗 **Key Concepts**
+
+- **Session Fixation**: Attacker sets a known session ID for the victim
+- **Session Regeneration**: Creating a new session ID after authentication
+- **HttpOnly Cookies**: Prevents JavaScript access to session cookies
+- **SameSite Cookies**: Prevents cross-site request attacks
+- **Secure Session Management**: Best practices for web application security
 
 ---
 
-**Happy Learning! 🍪🔒** 
+**🎯 Ready to start? Run `./setup_fish.sh` and begin your session fixation journey!** 
