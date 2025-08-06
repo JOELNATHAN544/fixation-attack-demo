@@ -5,9 +5,9 @@ This looks like the bank login but is actually the attacker's fake page.
 DO NOT USE IN PRODUCTION!
 """
 
-from flask import Flask, request, session, redirect, url_for, render_template, make_response
+from flask import Flask, request, session, redirect, url_for, render_template, make_response, flash
 from flask_session import Session
-import bcrypt
+from database import verify_user, user_exists
 
 app = Flask(__name__)
 app.secret_key = 'hacker_secret_key'  # Weak secret key
@@ -24,16 +24,6 @@ Session(app)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = None
 
-# Fake user database (hacker's fake credentials)
-FAKE_USERS = {
-    'john': bcrypt.hashpw('john123'.encode('utf-8'), bcrypt.gensalt(rounds=12)),
-    'alice': bcrypt.hashpw('alice123'.encode('utf-8'), bcrypt.gensalt(rounds=12)),
-    'bob': bcrypt.hashpw('bob123'.encode('utf-8'), bcrypt.gensalt(rounds=12))
-}
-
-def verify_password(password, hashed):
-    return bcrypt.checkpw(password.encode('utf-8'), hashed)
-
 @app.route('/')
 def index():
     if 'user_id' in session:
@@ -46,7 +36,14 @@ def fake_login():
         username = request.form['username']
         password = request.form['password']
         
-        if username in FAKE_USERS and verify_password(password, FAKE_USERS[username]):
+        # Check if user exists in database
+        if not user_exists(username):
+            flash('User not found. Please register on the bank website first.', 'error')
+            return render_template('vulnerable_login.html', session_id='N/A')
+        
+        # Verify user credentials
+        success, message = verify_user(username, password)
+        if success:
             # VULNERABLE: Session ID remains the same - SESSION FIXATION!
             # The session ID was set before login and remains unchanged
             session['user_id'] = username
@@ -59,7 +56,8 @@ def fake_login():
             
             return redirect(url_for('fake_dashboard'))
         else:
-            return "Invalid credentials"
+            flash(message, 'error')
+            return render_template('vulnerable_login.html', session_id='N/A')
     
     # VULNERABLE: Set session ID from URL parameter
     # This simulates the hacker setting a specific session ID
