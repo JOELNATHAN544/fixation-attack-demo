@@ -11,28 +11,38 @@
         <div class="dashboard-card">
             <div class="header">
                 <h1>🏦 SecureBank Dashboard</h1>
-                <p class="subtitle">Welcome, {{ user }}!</p>
+                <p class="subtitle">Welcome, {{ user_info.username }}!</p>
                 <div class="status-badge secure">🔒 SECURE BANK</div>
             </div>
             
-            <div class="account-info">
-                <h2>💰 Account Information</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="profile-info">
+                <h2>👤 User Profile</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>Account Holder:</label>
-                        <span>{{ user }}</span>
+                        <label>User ID:</label>
+                        <span>{{ user_info.id }}</span>
                     </div>
                     <div class="info-item">
-                        <label>Account Number:</label>
-                        <span>{{ account_info.account_number }}</span>
+                        <label>Username:</label>
+                        <span>{{ user_info.username }}</span>
                     </div>
                     <div class="info-item">
-                        <label>Current Balance:</label>
-                        <span class="balance">{{ account_info.balance }}</span>
+                        <label>Account Created:</label>
+                        <span>{{ user_info.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
                     </div>
                     <div class="info-item">
-                        <label>Account Type:</label>
-                        <span>{{ session_data.account_type }}</span>
+                        <label>Account Status:</label>
+                        <span class="status-active">Active</span>
                     </div>
                 </div>
             </div>
@@ -53,6 +63,16 @@
                     <li>✅ HttpOnly cookies enabled</li>
                     <li>✅ SameSite=Strict protection</li>
                     <li>✅ Secure session management</li>
+                </ul>
+            </div>
+            
+            <div class="actions">
+                <a href="{{ url_for('bank_logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
                 </ul>
             </div>
             
