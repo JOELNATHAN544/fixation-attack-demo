@@ -12,54 +12,57 @@
             <div class="header">
                 <h1>🏦 SecureBank Dashboard</h1>
                 <p class="subtitle">Welcome, {{ session_data.user_id }}!</p>
-                <div class="status-badge vulnerable">🚨 HACKER'S FAKE PAGE</div>
+                <div class="status-badge secure">🔒 SECURE BANK</div>
             </div>
             
-            <div class="alert alert-danger">
-                <strong>⚠️ WARNING:</strong> This is the HACKER'S FAKE DASHBOARD!
-                <br>The victim thinks they're logged into the bank, but they're actually on the hacker's site.
-            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             
-            <div class="fake-account-info">
-                <h2>💰 Fake Account Information</h2>
+            <div class="profile-info">
+                <h2>👤 User Profile</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>Account Holder:</label>
+                        <label>User ID:</label>
+                        <span>1</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Username:</label>
                         <span>{{ session_data.user_id }}</span>
                     </div>
                     <div class="info-item">
-                        <label>Account Number:</label>
-                        <span>FAKE-1234-5678</span>
+                        <label>Account Created:</label>
+                        <span>August 05, 2025 at 05:28 PM</span>
                     </div>
                     <div class="info-item">
-                        <label>Current Balance:</label>
-                        <span class="balance">$0.00</span>
-                    </div>
-                    <div class="info-item">
-                        <label>Account Type:</label>
-                        <span>Fake Account</span>
+                        <label>Account Status:</label>
+                        <span class="status-active">Active</span>
                     </div>
                 </div>
             </div>
             
             <div class="session-info">
-                <h3>🔍 Session Information (VULNERABLE)</h3>
+                <h3>🔍 Session Information</h3>
                 <div class="session-data">
-                    <p><strong>Session ID:</strong> {{ session_data.get('_id', 'Hidden') }}</p>
-                    <p><strong>Login Time:</strong> {{ session_data.get('login_time', 'N/A') }}</p>
-                    <p><strong>Fake Login:</strong> {{ session_data.get('fake_login', False) }}</p>
+                    <p><strong>Session ID:</strong> {{ session_data.get('_id', 'Hidden for security') }}</p>
+                    <p><strong>Login Time:</strong> {{ session_data.get('login_time', '2025-01-15T10:30:00Z') }}</p>
+                    <p><strong>Authenticated:</strong> {{ session_data.get('fake_login', True) }}</p>
                 </div>
-                <p class="warning">🚨 This session ID did NOT change after login!</p>
-                <p class="warning">🎯 Hacker can now use this session ID to access the victim's real bank account!</p>
             </div>
             
-            <div class="security-warning">
-                <h3>🚨 Security Vulnerabilities:</h3>
+            <div class="security-info">
+                <h3>🔒 Security Status</h3>
                 <ul>
-                    <li>❌ Session ID not regenerated after login</li>
-                    <li>❌ HttpOnly cookies disabled</li>
-                    <li>❌ SameSite protection disabled</li>
-                    <li>❌ Weak session secrets</li>
+                    <li>✅ Session regenerated after login</li>
+                    <li>✅ HttpOnly cookies enabled</li>
+                    <li>✅ SameSite=Strict protection</li>
+                    <li>✅ Secure session management</li>
                 </ul>
             </div>
             
