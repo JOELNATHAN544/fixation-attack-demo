@@ -3,163 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎭 Hacker Dashboard - Session Fixation Lab</title>
+    <title>Company Dashboard - Secure Access Portal</title>
     <style>
         body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            color: #00ff00;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
             margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 0;
         }
         .header {
-            text-align: center;
-            border-bottom: 2px solid #ff0000;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-        }
-        .warning {
-            background: #ff0000;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .stolen-sessions {
-            background: #000;
-            border: 2px solid #ff0000;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        .session-item {
-            background: #1a1a1a;
-            border: 1px solid #00ff00;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 10px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .session-id {
-            font-family: monospace;
-            color: #ffff00;
-            font-size: 12px;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
         }
         .user-info {
-            color: #00ffff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .login-form {
-            background: #000;
-            border: 2px solid #00ff00;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+        .user-name {
+            color: #333;
+            font-weight: 500;
         }
-        .form-group {
-            margin: 15px 0;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #00ff00;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            background: #1a1a1a;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            border-radius: 5px;
-            font-family: monospace;
-        }
-        button {
-            background: #ff0000;
+        .logout-btn {
+            background: #ff6b6b;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
+            text-decoration: none;
+            font-size: 14px;
         }
-        button:hover {
-            background: #cc0000;
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
-        .status {
-            color: #ffff00;
+        .welcome-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .welcome-card h1 {
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+        .welcome-card p {
+            color: #666;
+            margin: 0;
+        }
+        .login-method {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
+            margin-top: 10px;
+        }
+        .normal-login {
+            background: #4ecdc4;
+            color: white;
+        }
+        .stolen-login {
+            background: #ff6b6b;
+            color: white;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            color: #333;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card p {
+            color: #666;
+            margin: 5px 0;
+        }
+        .session-info {
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .action-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .action-btn:hover {
+            background: #5a6fd8;
+        }
+        .danger-btn {
+            background: #ff6b6b;
+        }
+        .danger-btn:hover {
+            background: #ff5252;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <div class="logo">🏢 Company Portal</div>
+        <div class="user-info">
+            <span class="user-name">{{ user_data.name }}</span>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
     <div class="container">
-        <div class="header">
-            <h1>🎭 HACKER DASHBOARD</h1>
-            <p>Session Fixation Attack Control Center</p>
-        </div>
-
-        <div class="warning">
-            ⚠️ WARNING: This is a DEMONSTRATION of malicious activity for educational purposes only! ⚠️
-        </div>
-
-        <div class="stolen-sessions">
-            <h2>📋 Available Stolen Session IDs</h2>
-            <p>These session IDs were stolen from the vulnerable application:</p>
+        <div class="welcome-card">
+            <h1>Welcome, {{ user_data.name }}!</h1>
+            <p>Role: {{ user_data.role | title }} | Email: {{ user_data.email }}</p>
             
-            {% for session_id, user_data in stolen_sessions.items() %}
-            <div class="session-item">
-                <div>
-                    <div class="session-id">{{ session_id }}</div>
-                    <div class="user-info">
-                        <strong>User:</strong> {{ user_data.username }} ({{ user_data.role }})
-                        <br>
-                        <strong>Email:</strong> {{ user_data.email }}
-                        <br>
-                        <strong>Stolen from:</strong> {{ user_data.stolen_from }}
-                        <br>
-                        <strong>Stolen time:</strong> {{ user_data.stolen_time }}
-                    </div>
+            {% if login_method == 'normal' %}
+                <span class="login-method normal-login">✅ Normal Login</span>
+                <div class="success">
+                    <strong>✅ Secure Login:</strong> You logged in using your username and password.
                 </div>
-                <div>
-                    <form action="/login" method="POST" style="display: inline;">
-                        <input type="hidden" name="session_id" value="{{ session_id }}">
-                        <button type="submit">🎭 Login as {{ user_data.username }}</button>
-                    </form>
+            {% else %}
+                <span class="login-method stolen-login">🎭 Stolen Session Login</span>
+                <div class="warning">
+                    <strong>⚠️ Session Fixation Attack:</strong> This account was accessed using a stolen session ID!
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>👤 Account Information</h3>
+                <p><strong>Username:</strong> {{ user_data.username }}</p>
+                <p><strong>Email:</strong> {{ user_data.email }}</p>
+                <p><strong>Role:</strong> {{ user_data.role | title }}</p>
+                <p><strong>Name:</strong> {{ user_data.name }}</p>
+                
+                {% if login_method == 'stolen_session' %}
+                    <p><strong>Stolen from:</strong> {{ user_data.stolen_from }}</p>
+                    <p><strong>Stolen time:</strong> {{ user_data.stolen_time }}</p>
+                    <div class="session-info">
+                        <strong>Stolen Session ID:</strong><br>
+                        {{ session_id }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h3>🔐 Security Status</h3>
+                {% if login_method == 'normal' %}
+                    <p>✅ Account accessed normally</p>
+                    <p>✅ Session created securely</p>
+                    <p>✅ No security issues detected</p>
+                {% else %}
+                    <p>❌ Account accessed via stolen session</p>
+                    <p>❌ Session fixation vulnerability exploited</p>
+                    <p>❌ Security breach detected</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h3>📊 Quick Actions</h3>
+                <div class="actions">
+                    <a href="#" class="action-btn">📧 View Messages</a>
+                    <a href="#" class="action-btn">📁 My Files</a>
+                    <a href="#" class="action-btn">⚙️ Settings</a>
+                    <a href="#" class="action-btn">📈 Reports</a>
                 </div>
             </div>
-            {% endfor %}
-        </div>
 
-        <div class="login-form">
-            <h2>🔑 Manual Session ID Login</h2>
-            <p>Enter a stolen session ID to impersonate the user:</p>
-            
-            <form action="/login" method="POST">
-                <div class="form-group">
-                    <label for="session_id">Stolen Session ID:</label>
-                    <input type="text" id="session_id" name="session_id" 
-                           placeholder="Enter stolen session ID here..." required>
+            {% if login_method == 'stolen_session' %}
+            <div class="card">
+                <h3>💀 Malicious Actions (Simulated)</h3>
+                <p>As a hacker, you can now perform these actions:</p>
+                <div class="actions">
+                    <a href="#" class="action-btn danger-btn">📧 Read User's Emails</a>
+                    <a href="#" class="action-btn danger-btn">💳 Access Bank Account</a>
+                    <a href="#" class="action-btn danger-btn">📁 Download Files</a>
+                    <a href="#" class="action-btn danger-btn">🔐 Change Password</a>
                 </div>
-                <button type="submit">🎭 Login with Stolen Session</button>
-            </form>
+            </div>
+            {% endif %}
         </div>
 
-        <div class="status">
-            <h3>🎯 Attack Status</h3>
-            <p>✅ Session fixation attack simulation ready</p>
-            <p>✅ Stolen session IDs available</p>
-            <p>✅ Ready to impersonate users</p>
+        {% if login_method == 'stolen_session' %}
+        <div class="card">
+            <h3>🔍 Session Fixation Analysis</h3>
+            <p><strong>Attack Type:</strong> Session Fixation</p>
+            <p><strong>Vulnerability:</strong> No session regeneration after login</p>
+            <p><strong>Impact:</strong> Complete account takeover</p>
+            <p><strong>Prevention:</strong> Session ID regeneration after authentication</p>
+            
+            <h4>How This Attack Worked:</h4>
+            <ol>
+                <li>Hacker obtained session ID from vulnerable application</li>
+                <li>User logged in using the same session ID</li>
+                <li>Session remained the same after authentication</li>
+                <li>Hacker can now access the authenticated session</li>
+            </ol>
         </div>
+        {% endif %}
     </div>
 </body>
 </html> 
