@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏦 SecureBank - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-card">
+            <div class="header">
+                <h1>🏦 SecureBank Dashboard</h1>
+                <p class="subtitle">Welcome, {{ user_info.username }}!</p>
+                <div class="status-badge secure">🔒 SECURE BANK</div>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="profile-info">
+                <h2>👤 User Profile</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>User ID:</label>
+                        <span>{{ user_info.id }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Username:</label>
+                        <span>{{ user_info.username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Created:</label>
+                        <span>{{ user_info.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Status:</label>
+                        <span class="status-active">Active</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="session-info">
+                <h3>🔍 Session Information</h3>
+                <div class="session-data">
+                    <p><strong>Session ID:</strong> Hidden for security</p>
+                    <p><strong>Login Time:</strong> {{ session_data.get('login_time', 'N/A') }}</p>
+                    <p><strong>Authenticated:</strong> {{ session_data.get('authenticated', False) }}</p>
+                </div>
+            </div>
+            
+            <div class="security-info">
+                <h3>🔒 Security Status</h3>
+                <ul>
+                    <li>✅ Session regenerated after login</li>
+                    <li>✅ HttpOnly cookies enabled</li>
+                    <li>✅ SameSite=Strict protection</li>
+                    <li>✅ Secure session management</li>
+                </ul>
+            </div>
+            
+            <div class="actions">
+                <a href="{{ url_for('bank_logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
