@@ -20,6 +20,16 @@
                 <br>It looks like the bank but is actually the attacker's malicious site.
             </div>
             
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
             <form method="POST" class="login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -33,15 +43,6 @@
                 
                 <button type="submit" class="btn btn-primary">Login to Bank</button>
             </form>
-            
-            <div class="test-accounts">
-                <h3>Test Accounts:</h3>
-                <ul>
-                    <li><strong>john</strong> / john123</li>
-                    <li><strong>alice</strong> / alice123</li>
-                    <li><strong>bob</strong> / bob123</li>
-                </ul>
-            </div>
             
             <div class="session-info">
                 <h3>🔍 Current Session ID (Before Login)</h3>
@@ -62,4 +63,5 @@
         </div>
     </div>
 </body>
+</html> 
 </html> 
